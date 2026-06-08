@@ -1,0 +1,60 @@
+{
+  "name": "premium-3d-photo-book",
+  "version": "1.0.0",
+  "description": "A stunning interactive 3D digital photo book with realistic page-turning animations",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": [
+    "photo-book",
+    "3d",
+    "interactive",
+    "animation",
+    "page-turning",
+    "digital-album",
+    "memories",
+    "cinematic",
+    "premium"
+  ],
+  "scripts": {
+    "start": "npx http-server -c-1 -o",
+    "serve": "npx serve",
+    "dev": "npx live-server",
+    "build": "echo 'No build step needed for this static site'",
+    "deploy:netlify": "echo 'Deploy to Netlify using the web interface'",
+    "deploy:vercel": "echo 'Deploy to Vercel using the web interface'",
+    "analyze": "npx lighthouse-cli --chrome-flags='--headless' http://localhost:8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/premium-3d-photo-book"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/premium-3d-photo-book/issues"
+  },
+  "homepage": "https://github.com/yourusername/premium-3d-photo-book#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "serve": "^14.1.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "files": [
+    "index.html",
+    "styles.css",
+    "script.js",
+    "config.js",
+    "README.md",
+    "LICENSE"
+  ]
+}

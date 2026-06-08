@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Book Theme Customizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .customizer-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .controls-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group input[type="color"],
+        .control-group input[type="range"],
+        .control-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .control-group input[type="range"] {
+            padding: 5px;
+            height: 35px;
+            cursor: pointer;
+        }
+
+        .color-preview {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .color-box:hover {
+            transform: scale(1.1);
+        }
+
+        .preview-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-item {
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .preview-item h3 {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        .preview-background {
+            height: 100px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-background::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            z-index: 0;
+        }
+
+        .preview-background span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .preview-page {
+            background: white;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-cover {
+            padding: 50px 30px;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .preview-cover h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .preview-cover p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .export-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .export-code {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            color: #333;
+            line-height: 1.6;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background: #8a2be2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+            font-size: 0.95rem;
+        }
+
+        button:hover {
+            background: #6a1be2;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .preset-buttons button {
+            padding: 8px 15px;
+            font-size: 0.85rem;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #2196F3;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #1565c0;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .customizer-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-panel {
+                order: 2;
+            }
+
+            .preview-panel {
+                order: 1;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: #8a2be2;
+            border-bottom-color: #8a2be2;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Photo Book Theme Customizer</h1>
+
+        <div class="info-box">
+            <strong>ℹ️ Instructions:</strong> Adjust colors and settings below. Copy the CSS code to apply your custom theme to styles.css
+        </div>
+
+        <!-- Preset Themes -->
+        <div class="export-section">
+            <h2>📦 Quick Presets</h2>
+            <p>Select a preset to start customizing:</p>
+            <div class="preset-buttons">
+                <button onclick="applyPreset('dark')">Dark Elegant</button>
+                <button onclick="applyPreset('warm')">Warm Luxury</button>
+                <button onclick="applyPreset('light')">Minimalist</button>
+                <button onclick="applyPreset('ocean')">Ocean Blue</button>
+                <button onclick="applyPreset('rose')">Rose Gold</button>
+            </div>
+        </div>
+
+        <!-- Main Customizer -->
+        <div class="customizer-wrapper">
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('colors')">Colors</button>
+                    <button class="tab-btn" onclick="switchTab('animation')">Animation</button>
+                    <button class="tab-btn" onclick="switchTab('layout')">Layout</button>
+                </div>
+
+                <!-- Colors Tab -->
+                <div id="colors" class="tab-content active">
+                    <div class="control-group">
+                        <label>Background Color 1</label>
+                        <input type="color" id="bgColor1" value="#0f0f1e" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Background Color 2</label>
+                        <input type="color" id="bgColor2" value="#1a1a2e" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Background Color 3</label>
+                        <input type="color" id="bgColor3" value="#16213e" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Page Background</label>
+                        <input type="color" id="pageColor" value="#f5f5f0" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Cover Background</label>
+                        <input type="color" id="coverColor" value="#2a2a2a" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Cover Text Color</label>
+                        <input type="color" id="textColor" value="#ffffff" onchange="updatePreview()">
+                    </div>
+
+                    <div class="control-group">
+                        <label>Accent Color</label>
+                        <input type="color" id="accentColor" value="#8a2be2" onchange="updatePreview()">
+                    </div>
+                </div>
+
+                <!-- Animation Tab -->
+                <div id="animation" class="tab-content">
+                    <div class="control-group">
+                        <label>Page Turn Duration (ms)</label>
+                        <input type="range" id="turnDuration" min="300" max="1200" value="600" onchange="updatePreview()">
+                        <span id="durationValue">600ms</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Drag Threshold (px)</label>
+                        <input type="range" id="dragThreshold" min="20" max="150" value="50" onchange="updatePreview()">
+                        <span id="thresholdValue">50px</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Animation Style</label>
+                        <select onchange="updatePreview()">
+                            <option value="slow">Slow & Smooth (Cinematic)</option>
+                            <option value="balanced" selected>Balanced</option>
+                            <option value="fast">Fast & Snappy (Modern)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Layout Tab -->
+                <div id="layout" class="tab-content">
+                    <div class="control-group">
+                        <label>Photos Per Page</label>
+                        <select onchange="updatePreview()">
+                            <option value="1">1 (Spotlight)</option>
+                            <option value="2">2 (Side by Side)</option>
+                            <option value="4" selected>4 (2x2 Classic)</option>
+                            <option value="6">6 (3x2 Gallery)</option>
+                            <option value="8">8 (4x2 Wide)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Corner Radius</label>
+                        <input type="range" id="cornerRadius" min="0" max="20" value="2" onchange="updatePreview()">
+                        <span id="radiusValue">2px</span>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Shadow Intensity</label>
+                        <input type="range" id="shadowIntensity" min="0" max="100" value="50" onchange="updatePreview()">
+                        <span id="shadowValue">50%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <div class="preview-item">
+                    <h3>Background Preview</h3>
+                    <div class="preview-background" id="bgPreview">
+                        <span>Page Turning Animation</span>
+                    </div>
+                </div>
+
+                <div class="preview-item">
+                    <h3>Front Cover Preview</h3>
+                    <div class="preview-cover" id="coverPreview">
+                        <h2>Memories</h2>
+                        <p>A Digital Photo Album</p>
+                    </div>
+                </div>
+
+                <div class="preview-item">
+                    <h3>Page Content Preview</h3>
+                    <div class="preview-page" id="pagePreview">
+                        <p>📸 Your photos will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Section -->
+        <div class="export-section">
+            <h2>📋 Export Your Theme</h2>
+            <p>Copy the CSS code below and paste it into your <code>styles.css</code> file:</p>
+            <div class="export-code" id="exportCode"></div>
+            <div class="button-group">
+                <button onclick="copyCode()">📋 Copy Code</button>
+                <button onclick="downloadCSS()">💾 Download CSS</button>
+                <button onclick="resetDefaults()">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="info-box" style="background: #f3e5f5; border-left-color: #8a2be2; color: #4a148c;">
+            <strong>✨ Pro Tip:</strong> After copying the code, paste it into your styles.css file to apply the theme to your photo book. Test it by opening index.html in your browser!
+        </div>
+    </div>
+
+    <script>
+        // Presets
+        const presets = {
+            dark: {
+                bgColor1: '#0f0f1e',
+                bgColor2: '#1a1a2e',
+                bgColor3: '#16213e',
+                pageColor: '#f5f5f0',
+                coverColor: '#2a2a2a',
+                textColor: '#ffffff',
+                accentColor: '#8a2be2'
+            },
+            warm: {
+                bgColor1: '#3d2817',
+                bgColor2: '#5c3d2e',
+                bgColor3: '#4a3728',
+                pageColor: '#faf5f0',
+                coverColor: '#8b6f47',
+                textColor: '#ffffff',
+                accentColor: '#d4a574'
+            },
+            light: {
+                bgColor1: '#ffffff',
+                bgColor2: '#f8f8f8',
+                bgColor3: '#e8e8e8',
+                pageColor: '#ffffff',
+                coverColor: '#f0f0f0',
+                textColor: '#333333',
+                accentColor: '#666666'
+            },
+            ocean: {
+                bgColor1: '#001a4d',
+                bgColor2: '#003d99',
+                bgColor3: '#0052cc',
+                pageColor: '#f0f5ff',
+                coverColor: '#003d99',
+                textColor: '#ffffff',
+                accentColor: '#0052cc'
+            },
+            rose: {
+                bgColor1: '#2d1b17',
+                bgColor2: '#4a2c26',
+                bgColor3: '#3d2a24',
+                pageColor: '#fef8f5',
+                coverColor: '#c9a67b',
+                textColor: '#ffffff',
+                accentColor: '#a68570'
+            }
+        };
+
+        function applyPreset(preset) {
+            const colors = presets[preset];
+            document.getElementById('bgColor1').value = colors.bgColor1;
+            document.getElementById('bgColor2').value = colors.bgColor2;
+            document.getElementById('bgColor3').value = colors.bgColor3;
+            document.getElementById('pageColor').value = colors.pageColor;
+            document.getElementById('coverColor').value = colors.coverColor;
+            document.getElementById('textColor').value = colors.textColor;
+            document.getElementById('accentColor').value = colors.accentColor;
+            updatePreview();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updatePreview() {
+            const bg1 = document.getElementById('bgColor1').value;
+            const bg2 = document.getElementById('bgColor2').value;
+            const bg3 = document.getElementById('bgColor3').value;
+            const pageColor = document.getElementById('pageColor').value;
+            const coverColor = document.getElementById('coverColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+            const duration = document.getElementById('turnDuration').value;
+            const radius = document.getElementById('cornerRadius').value;
+
+            // Update background preview
+            document.getElementById('bgPreview').style.background = 
+                `linear-gradient(135deg, ${bg1} 0%, ${bg2} 50%, ${bg3} 100%)`;
+
+            // Update cover preview
+            const coverPreview = document.getElementById('coverPreview');
+            coverPreview.style.background = coverColor;
+            coverPreview.style.color = textColor;
+            coverPreview.style.borderRadius = radius + 'px';
+
+            // Update page preview
+            const pagePreview = document.getElementById('pagePreview');
+            pagePreview.style.background = pageColor;
+            pagePreview.style.borderRadius = radius + 'px';
+
+            // Update values
+            document.getElementById('durationValue').textContent = duration + 'ms';
+            document.getElementById('thresholdValue').textContent = 
+                document.getElementById('dragThreshold').value + 'px';
+            document.getElementById('radiusValue').textContent = radius + 'px';
+            document.getElementById('shadowValue').textContent = 
+                document.getElementById('shadowIntensity').value + '%';
+
+            generateExportCode();
+        }
+
+        function generateExportCode() {
+            const bg1 = document.getElementById('bgColor1').value;
+            const bg2 = document.getElementById('bgColor2').value;
+            const bg3 = document.getElementById('bgColor3').value;
+            const pageColor = document.getElementById('pageColor').value;
+            const coverColor = document.getElementById('coverColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+
+            const code = `/* Custom Theme - Generated by Theme Customizer */
+.ambient-bg {
+    background: linear-gradient(135deg, ${bg1} 0%, ${bg2} 50%, ${bg3} 100%);
+}
+
+.page {
+    background: linear-gradient(135deg, ${pageColor} 0%, ${adjustBrightness(pageColor, -10)} 100%);
+}
+
+.page-cover {
+    background: linear-gradient(135deg, ${coverColor} 0%, ${adjustBrightness(coverColor, -20)} 100%);
+}
+
+.page-cover .page-content {
+    color: ${textColor};
+}
+
+.cover-text h1 {
+    background: linear-gradient(135deg, ${textColor} 0%, ${adjustBrightness(textColor, -30)} 100%);
+}
+
+.upload-btn {
+    border-color: rgba(138, 43, 226, 0.4);
+    color: rgba(138, 43, 226, 0.8);
+}`;
+
+            document.getElementById('exportCode').textContent = code;
+        }
+
+        function adjustBrightness(color, percent) {
+            const num = parseInt(color.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255))
+                .toString(16).slice(1);
+        }
+
+        function copyCode() {
+            const code = document.getElementById('exportCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copied to clipboard!');
+            });
+        }
+
+        function downloadCSS() {
+            const code = document.getElementById('exportCode').textContent;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(code));
+            element.setAttribute('download', 'custom-theme.css');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function resetDefaults() {
+            applyPreset('dark');
+            document.getElementById('turnDuration').value = 600;
+            document.getElementById('dragThreshold').value = 50;
+            document.getElementById('cornerRadius').value = 2;
+            document.getElementById('shadowIntensity').value = 50;
+            updatePreview();
+        }
+
+        // Initialize
+        updatePreview();
+    </script>
+</body>
+</html>
