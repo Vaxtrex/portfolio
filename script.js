@@ -108,7 +108,7 @@ gsap.utils.toArray('.section-title').forEach(element => {
         },
         opacity: 0,
         y: 40,
-        duration: 0.8,
+        duration: 0.2,
     });
 });
 
@@ -120,7 +120,7 @@ gsap.utils.toArray('.about-text').forEach(element => {
         },
         opacity: 0,
         y: 30,
-        duration: 0.8,
+        duration: 0.2,
     });
 });
 
