@@ -63,8 +63,8 @@ const mouseGlow = document.querySelector('.mouse-glow');
 
 document.addEventListener('mousemove', (e) => {
     gsap.to(mouseGlow, {
-        x: e.clientX - 150,
-        y: e.clientY - 150,
+        x: e.clientX - 50,
+        y: e.clientY - 50,
         duration: 0.5,
         overwrite: 'auto'
     });
